@@ -1,24 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import BarcodeScannerComponent from "react-qr-barcode-scanner";
 
 function App() {
+  const [data, setData] = React.useState("Not found");
+  const [torchOn, setTorchOn] = React.useState(false);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <BarcodeScannerComponent
+        width={500}
+        height={500}
+        torch={torchOn}
+        onUpdate={(err, result) => {
+          if (result) setData(result.text);
+          else setData("Not found");
+        }}
+      />
+      <p>{data}</p>
+      <button onClick={() => setTorchOn(!torchOn)}>
+        Switch Torch {torchOn ? "Off" : "On"}
+      </button>
+    </>
   );
 }
 
