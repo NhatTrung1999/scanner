@@ -1,27 +1,24 @@
-import React from "react";
-import BarcodeScannerComponent from "react-qr-barcode-scanner";
+import { useState } from "react";
+import { useZxing } from "react-zxing";
 
-function App() {
-  const [data, setData] = React.useState("Not found");
-  const [torchOn, setTorchOn] = React.useState(false);
+const App = () => {
+  const [result, setResult] = useState("");
+
+  const { ref } = useZxing({
+    onDecodeResult(result) {
+      setResult(result.getText());
+    },
+  });
 
   return (
     <>
-      <BarcodeScannerComponent
-        width={500}
-        height={500}
-        torch={torchOn}
-        onUpdate={(err, result) => {
-          if (result) setData(result.text);
-          else setData("Not found");
-        }}
-      />
-      <p>{data}</p>
-      <button onClick={() => setTorchOn(!torchOn)}>
-        Switch Torch {torchOn ? "Off" : "On"}
-      </button>
+      <video ref={ref} />
+      <p>
+        <span>Last result:</span>
+        <span>{result}</span>
+      </p>
     </>
   );
-}
+};
 
 export default App;
